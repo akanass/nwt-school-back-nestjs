@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { Observable, of } from 'rxjs';
 
 @Controller('hello')
 export class HelloController {
@@ -6,7 +7,7 @@ export class HelloController {
    * Handler to answer to /hello route
    */
   @Get()
-  sayHello(): string {
-    return 'world';
+  sayHello(): Observable<string> {
+    return of('world');
   }
 }
