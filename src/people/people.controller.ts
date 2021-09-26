@@ -1,4 +1,4 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Person } from './people.types';
 import { PeopleService } from './people.service';
@@ -21,5 +21,25 @@ export class PeopleController {
   @Get()
   findAll(): Observable<Person[] | void> {
     return this._peopleService.findAll();
+  }
+
+  /**
+   * Handler to answer to /people/random route
+   *
+   * @returns Observable<Person | void>
+   */
+  @Get('random')
+  findRandom(): Observable<Person | void> {
+    return this._peopleService.findRandom();
+  }
+
+  /**
+   * Handler to answer to /people/:id route
+   *
+   * @returns Observable<Person>
+   */
+  @Get(':id')
+  findOne(@Param('id') id: string): Observable<Person> {
+    return this._peopleService.findOne(id);
   }
 }
