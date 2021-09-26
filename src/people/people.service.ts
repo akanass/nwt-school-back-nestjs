@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { find, from, Observable, of, throwError } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { Person } from './people.types';
 
@@ -27,6 +27,35 @@ export class PeopleService {
   findAll = (): Observable<Person[] | void> =>
     of(this._people).pipe(
       map((_: Person[]) => (!!_ && !!_.length ? _ : undefined)),
+    );
+
+  /**
+   * Returns randomly one person of the list
+   *
+   * @returns {Observable<Person | void>}
+   */
+  findRandom = (): Observable<Person | void> =>
+    of(this._people[Math.round(Math.random() * this._people.length)]).pipe(
+      map((_: Person) => (!!_ ? _ : undefined)),
+    );
+
+  /**
+   * Returns one person of the list matching id in parameter
+   *
+   * @param {string} id of the person
+   *
+   * @returns {Observable<Person>}
+   */
+  findOne = (id: string): Observable<Person> =>
+    from(this._people).pipe(
+      find((_: Person) => _.id === id),
+      mergeMap((_: Person) =>
+        !!_
+          ? of(_)
+          : throwError(
+              () => new NotFoundException(`People with id '${id}' not found`),
+            ),
+      ),
     );
 
   /**
