@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { find, from, Observable, of, throwError } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { Person } from './people.types';
+import { CreatePersonDto } from './dto/create-person.dto';
 
 @Injectable()
 export class PeopleService {
@@ -59,6 +64,49 @@ export class PeopleService {
     );
 
   /**
+   * Check if person already exists and add it in people list
+   *
+   * @param person to create
+   *
+   * @returns {Observable<Person>}
+   */
+  create = (person: CreatePersonDto): Observable<Person> =>
+    from(this._people).pipe(
+      find(
+        (_: Person) =>
+          _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
+          _.firstname.toLowerCase() === person.firstname.toLowerCase(),
+      ),
+      mergeMap((_: Person) =>
+        !!_
+          ? throwError(
+              () =>
+                new ConflictException(
+                  `People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`,
+                ),
+            )
+          : this._addPerson(person),
+      ),
+    );
+
+  /**
+   * Add person with good data in people list
+   *
+   * @param person to add
+   *
+   * @returns {Observable<Person>}
+   *
+   * @private
+   */
+  private _addPerson = (person: CreatePersonDto): Observable<Person> =>
+    of({
+      ...person,
+      id: this._createId(),
+      birthDate: this._parseDate('06/05/1985'),
+      photo: 'https://randomuser.me/api/portraits/lego/6.jpg',
+    }).pipe(tap((_: Person) => (this._people = this._people.concat(_))));
+
+  /**
    * Function to parse date and return timestamp
    *
    * @param {string} date to parse
@@ -71,4 +119,13 @@ export class PeopleService {
     const dates = date.split('/');
     return new Date(dates[2] + '/' + dates[1] + '/' + dates[0]).getTime();
   };
+
+  /**
+   * Creates a new id
+   *
+   * @returns {string}
+   *
+   * @private
+   */
+  private _createId = (): string => `${new Date().getTime()}`;
 }
