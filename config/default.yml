@@ -1,3 +1,9 @@
 server:
   host: 0.0.0.0
   port: 3000
+swagger:
+  title: New Web's Technologies course with NestJS
+  description: The People API description
+  version: 1.0
+  tag: people
+  path: documentation
