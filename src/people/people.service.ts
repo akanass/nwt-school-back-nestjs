@@ -121,6 +121,19 @@ export class PeopleService {
     );
 
   /**
+   * Deletes one person in people list
+   *
+   * @param {string} id of the person to delete
+   *
+   * @returns {Observable<void>}
+   */
+  delete = (id: string): Observable<void> =>
+    this._findPeopleIndexOfList(id).pipe(
+      tap((_: number) => this._people.splice(_, 1)),
+      map(() => undefined),
+    );
+
+  /**
    * Finds index of array for current person
    *
    * @param {string} id of the person to find
