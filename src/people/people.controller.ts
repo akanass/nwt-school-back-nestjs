@@ -14,6 +14,7 @@ import { PeopleService } from './people.service';
 import { HttpInterceptor } from '../interceptors/http.interceptor';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
+import { HandlerParams } from './validators/handler-params';
 
 @Controller('people')
 @UseInterceptors(HttpInterceptor)
@@ -45,13 +46,15 @@ export class PeopleController {
   }
 
   /**
-   * Handler to answer to /people/:id route
+   * Handler to answer to GET /people/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
    *
    * @returns Observable<Person>
    */
   @Get(':id')
-  findOne(@Param('id') id: string): Observable<Person> {
-    return this._peopleService.findOne(id);
+  findOne(@Param() params: HandlerParams): Observable<Person> {
+    return this._peopleService.findOne(params.id);
   }
 
   /**
@@ -69,28 +72,28 @@ export class PeopleController {
   /**
    * Handler to answer to /people route
    *
-   * @param id
-   * @param updatePersonDto
+   * @param {HandlerParams} params list of route params to take person id
+   * @param {UpdatePersonDto} updatePersonDto data to update
    *
    * @returns Observable<Person>
    */
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param() params: HandlerParams,
     @Body() updatePersonDto: UpdatePersonDto,
   ): Observable<Person> {
-    return this._peopleService.update(id, updatePersonDto);
+    return this._peopleService.update(params.id, updatePersonDto);
   }
 
   /**
    * Handler to answer to DELETE /people/:id route
    *
-   * @param {string} id of the person to delete
+   * @param {HandlerParams} params list of route params to take person id
    *
    * @returns Observable<void>
    */
   @Delete(':id')
-  delete(@Param('id') id: string): Observable<void> {
-    return this._peopleService.delete(id);
+  delete(@Param() params: HandlerParams): Observable<void> {
+    return this._peopleService.delete(params.id);
   }
 }
