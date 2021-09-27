@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -79,5 +80,17 @@ export class PeopleController {
     @Body() updatePersonDto: UpdatePersonDto,
   ): Observable<Person> {
     return this._peopleService.update(id, updatePersonDto);
+  }
+
+  /**
+   * Handler to answer to DELETE /people/:id route
+   *
+   * @param {string} id of the person to delete
+   *
+   * @returns Observable<void>
+   */
+  @Delete(':id')
+  delete(@Param('id') id: string): Observable<void> {
+    return this._peopleService.delete(id);
   }
 }
