@@ -7,3 +7,9 @@ swagger:
   version: 1.0
   tag: people
   path: documentation
+mongodb:
+  uri: mongodb://0.0.0.0:27017/nwt
+  options:
+    useNewUrlParser: true
+    useUnifiedTopology: true
+    useFindAndModify: false
