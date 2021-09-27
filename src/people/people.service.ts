@@ -3,11 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { find, from, Observable, of, throwError } from 'rxjs';
+import { find, findIndex, from, Observable, of, throwError } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { PEOPLE } from '../data/people';
 import { Person } from './people.types';
 import { CreatePersonDto } from './dto/create-person.dto';
+import { UpdatePersonDto } from './dto/update-person.dto';
 
 @Injectable()
 export class PeopleService {
@@ -86,6 +87,57 @@ export class PeopleService {
                 ),
             )
           : this._addPerson(person),
+      ),
+    );
+
+  /**
+   * Update a person in people list
+   *
+   * @param {string} id of the person to update
+   * @param person data to update
+   *
+   * @returns {Observable<Person>}
+   */
+  update = (id: string, person: UpdatePersonDto): Observable<Person> =>
+    from(this._people).pipe(
+      find(
+        (_: Person) =>
+          _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
+          _.firstname.toLowerCase() === person.firstname.toLowerCase() &&
+          _.id.toLowerCase() !== id.toLowerCase(),
+      ),
+      mergeMap((_: Person) =>
+        !!_
+          ? throwError(
+              () =>
+                new ConflictException(
+                  `People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`,
+                ),
+            )
+          : this._findPeopleIndexOfList(id),
+      ),
+      tap((index: number) => Object.assign(this._people[index], person)),
+      map((index: number) => this._people[index]),
+    );
+
+  /**
+   * Finds index of array for current person
+   *
+   * @param {string} id of the person to find
+   *
+   * @returns {Observable<number>}
+   *
+   * @private
+   */
+  private _findPeopleIndexOfList = (id: string): Observable<number> =>
+    from(this._people).pipe(
+      findIndex((_: Person) => _.id === id),
+      mergeMap((index: number) =>
+        index > -1
+          ? of(index)
+          : throwError(
+              () => new NotFoundException(`People with id '${id}' not found`),
+            ),
       ),
     );
 
