@@ -1,13 +1,55 @@
 import { PersonAddressDto } from './person-address.dto';
+import {
+  IsBoolean,
+  IsEmail,
+  IsInstance,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class UpdatePersonDto {
-  readonly firstname: string;
-  readonly lastname: string;
-  readonly entity?: string;
-  readonly email?: string;
-  readonly phone?: string;
-  readonly address?: PersonAddressDto;
-  readonly isManager?: boolean;
-  readonly manager?: string;
-  readonly managerId?: string;
+  @IsString()
+  @IsNotEmpty()
+  firstname: string;
+
+  @IsString()
+  @IsNotEmpty()
+  lastname: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  entity?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsPhoneNumber('FR')
+  phone?: string;
+
+  @IsOptional()
+  @IsInstance(PersonAddressDto)
+  @ValidateNested()
+  @Type(() => PersonAddressDto)
+  address?: PersonAddressDto;
+
+  @IsOptional()
+  @IsBoolean()
+  isManager?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  manager?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  managerId?: string;
 }

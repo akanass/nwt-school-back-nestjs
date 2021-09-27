@@ -1,5 +1,15 @@
+import { IsNotEmpty, IsString } from 'class-validator';
+
 export class PersonAddressDto {
-  readonly street: string;
-  readonly postalCode: string;
-  readonly city: string;
+  @IsString()
+  @IsNotEmpty()
+  street: string;
+
+  @IsString()
+  @IsNotEmpty()
+  postalCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
 }
