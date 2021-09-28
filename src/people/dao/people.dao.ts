@@ -4,6 +4,7 @@ import { Person, PersonDocument } from '../schemas/person.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { CreatePersonDto } from '../dto/create-person.dto';
 
 @Injectable()
 export class PeopleDao {
@@ -43,5 +44,17 @@ export class PeopleDao {
       filter((doc: PersonDocument) => !!doc),
       map((doc: PersonDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Check if person already exists with index and add it in people list
+   *
+   * @param {CreatePersonDto} person to create
+   *
+   * @return {Observable<Person>}
+   */
+  save = (person: CreatePersonDto): Observable<Person> =>
+    from(new this._personModel(person).save()).pipe(
+      map((doc: PersonDocument) => doc.toJSON()),
     );
 }
