@@ -4,8 +4,22 @@ import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type PersonDocument = Person & Document;
 
-@Schema({ toJSON: { virtuals: true }, versionKey: false })
+@Schema({
+  toJSON: {
+    virtuals: true,
+    transform: (doc: any, ret: any) => {
+      // delete obsolete data
+      delete ret._id;
+    },
+  },
+  versionKey: false,
+})
 export class Person {
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+  })
+  _id: string;
+
   @Prop({
     type: String,
     required: true,
