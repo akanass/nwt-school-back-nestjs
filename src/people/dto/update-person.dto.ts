@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsEmail,
   IsInstance,
+  IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -92,7 +93,7 @@ export class UpdatePersonDto {
     example: '5763cd4dc378a38ecd387737',
   })
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   @IsNotEmpty()
   managerId?: string;
 }
