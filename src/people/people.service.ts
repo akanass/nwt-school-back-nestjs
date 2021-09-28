@@ -94,22 +94,19 @@ export class PeopleService {
    * @returns {Observable<PersonEntity>}
    */
   create = (person: CreatePersonDto): Observable<PersonEntity> =>
-    from(this._people).pipe(
-      find(
-        (_: Person) =>
-          _.lastname.toLowerCase() === person.lastname.toLowerCase() &&
-          _.firstname.toLowerCase() === person.firstname.toLowerCase(),
-      ),
-      mergeMap((_: Person) =>
-        !!_
+    this._addPerson(person).pipe(
+      mergeMap((_: CreatePersonDto) => this._peopleDao.save(_)),
+      catchError((e) =>
+        e.code === 11000
           ? throwError(
               () =>
                 new ConflictException(
                   `People with lastname '${person.lastname}' and firstname '${person.firstname}' already exists`,
                 ),
             )
-          : this._addPerson(person),
+          : throwError(() => new UnprocessableEntityException(e.message)),
       ),
+      map((_: P) => new PersonEntity(_)),
     );
 
   /**
@@ -181,20 +178,16 @@ export class PeopleService {
    *
    * @param person to add
    *
-   * @returns {Observable<PersonEntity>}
+   * @returns {Observable<CreatePersonDto>}
    *
    * @private
    */
-  private _addPerson = (person: CreatePersonDto): Observable<PersonEntity> =>
+  private _addPerson = (person: CreatePersonDto): Observable<CreatePersonDto> =>
     of({
       ...person,
-      id: this._createId(),
       birthDate: this._parseDate('06/05/1985'),
       photo: 'https://randomuser.me/api/portraits/lego/6.jpg',
-    }).pipe(
-      tap((_: Person) => (this._people = this._people.concat(_))),
-      map((_: Person) => new PersonEntity(_)),
-    );
+    });
 
   /**
    * Function to parse date and return timestamp
@@ -209,13 +202,4 @@ export class PeopleService {
     const dates = date.split('/');
     return new Date(dates[2] + '/' + dates[1] + '/' + dates[0]).getTime();
   };
-
-  /**
-   * Creates a new id
-   *
-   * @returns {string}
-   *
-   * @private
-   */
-  private _createId = (): string => `${new Date().getTime()}`;
 }

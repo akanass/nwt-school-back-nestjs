@@ -115,6 +115,9 @@ export class PeopleController {
     description: 'The person already exists in the database',
   })
   @ApiBadRequestResponse({ description: 'Payload provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
   @ApiBody({
     description: 'Payload to create a new person',
     type: CreatePersonDto,

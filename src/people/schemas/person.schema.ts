@@ -17,6 +17,7 @@ export type PersonDocument = Person & Document;
 export class Person {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
+    auto: true,
   })
   _id: string;
 
