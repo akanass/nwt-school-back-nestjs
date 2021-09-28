@@ -2,8 +2,10 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import {
+  catchError,
   defaultIfEmpty,
   find,
   findIndex,
@@ -56,8 +58,11 @@ export class PeopleService {
    * @returns {Observable<PersonEntity | void>}
    */
   findRandom = (): Observable<PersonEntity | void> =>
-    of(this._people[Math.round(Math.random() * this._people.length)]).pipe(
-      map((_: Person) => (!!_ ? new PersonEntity(_) : undefined)),
+    this._peopleDao.find().pipe(
+      filter((_: P[]) => !!_),
+      map((_: P[]) => _[Math.round(Math.random() * _.length)]),
+      map((_: P) => new PersonEntity(_)),
+      defaultIfEmpty(undefined),
     );
 
   /**
@@ -68,9 +73,11 @@ export class PeopleService {
    * @returns {Observable<PersonEntity>}
    */
   findOne = (id: string): Observable<PersonEntity> =>
-    from(this._people).pipe(
-      find((_: Person) => _.id === id),
-      mergeMap((_: Person) =>
+    this._peopleDao.findById(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: P) =>
         !!_
           ? of(new PersonEntity(_))
           : throwError(
