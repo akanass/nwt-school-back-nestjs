@@ -9,7 +9,3 @@ swagger:
   path: documentation
 mongodb:
   uri: mongodb://0.0.0.0:27017/nwt
-  options:
-    useNewUrlParser: true
-    useUnifiedTopology: true
-    useFindAndModify: false
