@@ -30,4 +30,18 @@ export class PeopleDao {
       ),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Returns one person of the list matching id in parameter
+   *
+   * @param {string} id of the person in the db
+   *
+   * @return {Observable<Person | void>}
+   */
+  findById = (id: string): Observable<Person | void> =>
+    from(this._personModel.findById(id)).pipe(
+      filter((doc: PersonDocument) => !!doc),
+      map((doc: PersonDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
 }
