@@ -22,6 +22,9 @@ export class Person {
   _id: string;
 
   @Prop({
+@Schema({ toJSON: { virtuals: true }, versionKey: false })
+export class Person {
+  @Prop({
     type: String,
     required: true,
     trim: true,
