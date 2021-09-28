@@ -17,13 +17,9 @@ export type PersonDocument = Person & Document;
 export class Person {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    auto: true,
   })
   _id: string;
 
-  @Prop({
-@Schema({ toJSON: { virtuals: true }, versionKey: false })
-export class Person {
   @Prop({
     type: String,
     required: true,
