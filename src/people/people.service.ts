@@ -4,41 +4,22 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import {
-  catchError,
-  defaultIfEmpty,
-  find,
-  findIndex,
-  from,
-  Observable,
-  of,
-  throwError,
-} from 'rxjs';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
-import { PEOPLE } from '../data/people';
-import { Person } from './people.types';
+import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PersonEntity } from './entities/person.entity';
 import { PeopleDao } from './dao/people.dao';
-import { Person as P } from './schemas/person.schema';
+import { Person } from './schemas/person.schema';
 
 @Injectable()
 export class PeopleService {
-  // private property to store all people
-  private _people: Person[];
-
   /**
    * Class constructor
    *
    * @param {PeopleDao} _peopleDao instance of the DAO
    */
-  constructor(private readonly _peopleDao: PeopleDao) {
-    this._people = [].concat(PEOPLE).map((person) => ({
-      ...person,
-      birthDate: this._parseDate(person.birthDate),
-    }));
-  }
+  constructor(private readonly _peopleDao: PeopleDao) {}
 
   /**
    * Returns all existing people in the list
@@ -47,8 +28,8 @@ export class PeopleService {
    */
   findAll = (): Observable<PersonEntity[] | void> =>
     this._peopleDao.find().pipe(
-      filter((_: P[]) => !!_),
-      map((_: P[]) => _.map((__: P) => new PersonEntity(__))),
+      filter((_: Person[]) => !!_),
+      map((_: Person[]) => _.map((__: Person) => new PersonEntity(__))),
       defaultIfEmpty(undefined),
     );
 
@@ -59,9 +40,9 @@ export class PeopleService {
    */
   findRandom = (): Observable<PersonEntity | void> =>
     this._peopleDao.find().pipe(
-      filter((_: P[]) => !!_),
-      map((_: P[]) => _[Math.round(Math.random() * _.length)]),
-      map((_: P) => new PersonEntity(_)),
+      filter((_: Person[]) => !!_),
+      map((_: Person[]) => _[Math.round(Math.random() * _.length)]),
+      map((_: Person) => new PersonEntity(_)),
       defaultIfEmpty(undefined),
     );
 
@@ -77,7 +58,7 @@ export class PeopleService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: P) =>
+      mergeMap((_: Person) =>
         !!_
           ? of(new PersonEntity(_))
           : throwError(
@@ -106,7 +87,7 @@ export class PeopleService {
             )
           : throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      map((_: P) => new PersonEntity(_)),
+      map((_: Person) => new PersonEntity(_)),
     );
 
   /**
@@ -129,7 +110,7 @@ export class PeopleService {
             )
           : throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: P) =>
+      mergeMap((_: Person) =>
         !!_
           ? of(new PersonEntity(_))
           : throwError(
@@ -146,28 +127,15 @@ export class PeopleService {
    * @returns {Observable<void>}
    */
   delete = (id: string): Observable<void> =>
-    this._findPeopleIndexOfList(id).pipe(
-      tap((_: number) => this._people.splice(_, 1)),
-      map(() => undefined),
-    );
-
-  /**
-   * Finds index of array for current person
-   *
-   * @param {string} id of the person to find
-   *
-   * @returns {Observable<number>}
-   *
-   * @private
-   */
-  private _findPeopleIndexOfList = (id: string): Observable<number> =>
-    from(this._people).pipe(
-      findIndex((_: Person) => _.id === id),
-      mergeMap((index: number) =>
-        index > -1
-          ? of(index)
+    this._peopleDao.findByIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Person) =>
+        !!_
+          ? of(undefined)
           : throwError(
-              () => new NotFoundException(`People with id '${id}' not found`),
+              () => new NotFoundException(`Person with id '${id}' not found`),
             ),
       ),
     );

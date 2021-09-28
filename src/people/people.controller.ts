@@ -180,6 +180,9 @@ export class PeopleController {
     description: 'Person with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
   @ApiParam({
     name: 'id',
     description: 'Unique identifier of the person in the database',

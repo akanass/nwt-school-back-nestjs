@@ -81,4 +81,18 @@ export class PeopleDao {
       map((doc: PersonDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Delete a person in people list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Person | void>}
+   */
+  findByIdAndRemove = (id: string): Observable<Person | void> =>
+    from(this._personModel.findByIdAndRemove(id)).pipe(
+      filter((doc: PersonDocument) => !!doc),
+      map((doc: PersonDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
 }
