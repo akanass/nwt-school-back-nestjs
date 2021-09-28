@@ -4,5 +4,5 @@
  */
 db.getCollection('people').createIndex(
   { firstname: 1, lastname: 1 },
-  { unique: true },
+  { unique: true }
 );

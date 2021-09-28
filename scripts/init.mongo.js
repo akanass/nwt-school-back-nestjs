@@ -192,7 +192,7 @@ data.forEach(function (element) {
       // update the person with the managerId
       db.getCollection('people').updateOne(
         { _id: element._id },
-        { $set: { managerId: manager._id } },
+        { $set: { managerId: manager._id } }
       );
     }
   }
