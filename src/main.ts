@@ -17,6 +17,9 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
     new FastifyAdapter({ logger: true }),
   );
 
+  // enable CORS for NG Application's calls
+  await app.enableCors({ origin: config.cors });
+
   // use global pipe validation
   await app.useGlobalPipes(
     new ValidationPipe({

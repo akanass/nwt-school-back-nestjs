@@ -1,6 +1,10 @@
 server:
   host: 0.0.0.0
   port: 3000
+  cors:
+    - "http://0.0.0.0:4200"
+    - "http://127.0.0.1:4200"
+    - "http://localhost:4200"
 swagger:
   title: New Web's Technologies course with NestJS
   description: The People API description

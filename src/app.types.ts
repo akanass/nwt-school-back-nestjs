@@ -1,6 +1,7 @@
 export type AppConfig = {
   host: string;
   port: number;
+  cors: string[];
 };
 
 export type SwaggerConfig = {
