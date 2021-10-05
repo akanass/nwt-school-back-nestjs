@@ -26,7 +26,7 @@ This course is **only in French** and if you want to contribute and translate it
 
 [System Information]
 NodeJS Version : v16.10.0
-YARN Version    : 1.22.13 
+YARN Version    : 1.22.15 
 
 [Nest CLI]
 Nest CLI Version : 8.1.2 
