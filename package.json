@@ -20,10 +20,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^8.0.10",
-    "@nestjs/core": "^8.0.10",
+    "@nestjs/common": "^8.0.11",
+    "@nestjs/core": "^8.0.11",
     "@nestjs/mongoose": "^9.0.0",
-    "@nestjs/platform-fastify": "^8.0.10",
+    "@nestjs/platform-fastify": "^8.0.11",
     "@nestjs/swagger": "^5.1.0",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
@@ -32,14 +32,14 @@
     "js-yaml": "^4.1.0",
     "mongoose": "^6.0.9",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.3.1"
+    "rxjs": "^7.4.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.1.2",
     "@nestjs/schematics": "^8.0.3",
-    "@nestjs/testing": "^8.0.10",
+    "@nestjs/testing": "^8.0.11",
     "@types/jest": "^27.0.2",
-    "@types/node": "^16.10.2",
+    "@types/node": "^16.10.3",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
