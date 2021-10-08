@@ -32,13 +32,13 @@ YARN Version    : 1.22.15
 Nest CLI Version : 8.1.2 
 
 [Nest Platform Information]
-platform-fastify version : 8.0.10
+platform-fastify version : 8.0.11
 schematics version       : 8.0.3
 mongoose version         : 9.0.0
 swagger version          : 5.1.0
-testing version          : 8.0.10
-common version           : 8.0.10
-core version             : 8.0.10
+testing version          : 8.0.11
+common version           : 8.0.11
+core version             : 8.0.11
 cli version              : 8.1.2
 
 </code></pre>
