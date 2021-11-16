@@ -25,20 +25,20 @@ This course is **only in French** and if you want to contribute and translate it
 
 
 [System Information]
-NodeJS Version : v16.11.0
-YARN Version    : 1.22.15 
+NodeJS Version : v17.0.1
+YARN Version    : 1.22.17 
 
 [Nest CLI]
-Nest CLI Version : 8.1.2 
+Nest CLI Version : 8.1.4 
 
 [Nest Platform Information]
-platform-fastify version : 8.0.11
-schematics version       : 8.0.3
-mongoose version         : 9.0.0
-swagger version          : 5.1.0
-testing version          : 8.0.11
-common version           : 8.0.11
-core version             : 8.0.11
-cli version              : 8.1.2
+platform-fastify version : 8.2.1
+schematics version       : 8.0.5
+mongoose version         : 9.0.1
+swagger version          : 5.1.4
+testing version          : 8.2.1
+common version           : 8.2.1
+core version             : 8.2.1
+cli version              : 8.1.4
 
 </code></pre>
