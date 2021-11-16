@@ -18,7 +18,7 @@ export class Person {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
   })
-  _id: string;
+  _id: any;
 
   @Prop({
     type: String,
